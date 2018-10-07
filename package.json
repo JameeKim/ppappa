@@ -1,24 +1,57 @@
 {
-    "name": "ppappa",
-    "version": "1.0.0",
-    "description": "",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
-    },
-    "author": "Jamee Kim <jameekim@nodaplife.me>",
-    "license": "MIT",
-    "devDependencies": {
-        "@types/node": "^10.11.4",
-        "@types/webpack": "^4.4.14",
-        "@types/webpack-env": "^1.13.6",
-        "@types/webpack-merge": "^4.1.3",
-        "ts-loader": "^5.2.1",
-        "tslint": "^5.11.0",
-        "typescript": "^3.1.1",
-        "webpack": "^4.20.2",
-        "webpack-cli": "^3.1.2",
-        "webpack-merge": "^4.1.4"
-    }
+  "name": "ppappa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/module/index.js",
+  "scripts": {
+    "build": "npm-run-all build:*",
+    "build:cjs": "tsc -p src/compiler/tsconfig.cjs.json",
+    "clean:build": "rimraf dist web",
+    "clean:lib": "rimraf dist",
+    "clean:web": "rimraf web",
+    "clean:coverage": "rimraf coverage",
+    "lint": "tslint -p src/tsconfig.json -c src/tslint.json \"src/**/*.ts\"",
+    "test": "TS_NODE_PROJECT=\"src/compiler/tsconfig.json\" mocha",
+    "pretest:coverage": "npm-run-all clean:coverage",
+    "test:coverage": "TS_NODE_PROJECT=\"src/compiler/tsconfig.json\" nyc mocha",
+    "coverage:send": "nyc report --reporter text-lcov | coveralls"
+  },
+  "author": "Jamee Kim <jameekim@nodaplife.me>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^10.11.4",
+    "@types/webpack": "^4.4.14",
+    "@types/webpack-env": "^1.13.6",
+    "@types/webpack-merge": "^4.1.3",
+    "coveralls": "^3.0.2",
+    "mocha": "^5.2.0",
+    "npm-run-all": "^4.1.3",
+    "nyc": "^13.0.1",
+    "ts-loader": "^5.2.1",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^3.1.1",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2",
+    "webpack-merge": "^4.1.4"
+  },
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "src/**/*.spec.ts"
+    ],
+    "reporter": [
+      "html",
+      "text"
+    ],
+    "sourceMap": true,
+    "instrument": true
+  }
 }

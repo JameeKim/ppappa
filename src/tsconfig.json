@@ -5,7 +5,13 @@
     "lib": [
       "es2015",
       "dom"
-    ]
+    ],
+    "noEmitOnError": true,
+    "sourceMap": true,
+    "forceConsistentCasingInFileNames": true,
+    "newLine": "lf",
+    "noImplicitReturns": true,
+    "strict": true
   },
   "include": [
     "./**/*.ts"

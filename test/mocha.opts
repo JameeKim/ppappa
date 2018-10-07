@@ -1,0 +1,2 @@
+--register ts-node/register
+src/compiler/**/*.spec.ts
