@@ -60,6 +60,10 @@ typings/
 # next.js build output
 .next
 
+# editor files
+.vscode
+.idea
+
 # build output directories
 dist
 web
