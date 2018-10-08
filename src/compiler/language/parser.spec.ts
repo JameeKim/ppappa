@@ -9,10 +9,14 @@ function runTestCases(testCases: ITestCases): void {
   for (const value in testCases) {
     if (testCases.hasOwnProperty(value)) {
       const tokens = testCases[value];
-      it(`parse "${value}"`, function() {
+      it(`parse "${convertNewline(value)}"`, function() {
         expect(parse(value)).to.deep.eq(tokens);
       });
     }
+  }
+
+  function convertNewline(str: string): string {
+    return str.replace(/\n/g, "\\n").replace(/\r/g, "\\r");
   }
 }
 
@@ -69,6 +73,10 @@ describe("Parser", function() {
       ],
       "_ (○_○)_P": [
         { type: TokenType.FLUSH, value: "_ (○_○)_P" },
+        { type: TokenType.EOF, value: "\0" },
+      ],
+      "# line comment\n": [
+        { type: TokenType.COMMENT, value: "# line comment" },
         { type: TokenType.EOF, value: "\0" },
       ],
     });
@@ -132,7 +140,7 @@ describe("Parser", function() {
 
   describe("- With spaces", function() {
     runTestCases({
-      "느아므아 끄아 느아므아쁘아쁘아므아\n으아\n므어 끄어 므아 끄아\n으어\n끄어 뜨어\n_ (○_○)_P\n": [
+      "느아므아 끄아 느아므아쁘아쁘아므아\n# 두 숫자를 더한다\r\n으아\r므어 끄어 므아 끄아\n으어\r\n끄어 뜨어\r_ (○_○)_P\n": [
         { type: TokenType.INSERT, value: "느아" },
         { type: TokenType.ADD, value: "므아" },
         { type: TokenType.POINT_R, value: "끄아" },
@@ -141,6 +149,7 @@ describe("Parser", function() {
         { type: TokenType.MUL, value: "쁘아" },
         { type: TokenType.MUL, value: "쁘아" },
         { type: TokenType.ADD, value: "므아" },
+        { type: TokenType.COMMENT, value: "# 두 숫자를 더한다" },
         { type: TokenType.SKIP, value: "으아" },
         { type: TokenType.SUB, value: "므어" },
         { type: TokenType.POINT_L, value: "끄어" },

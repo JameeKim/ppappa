@@ -13,6 +13,7 @@ export enum TokenType {
   SKIP = "skip of 0",
   REPEAT = "repeat if not 0",
   FLUSH = "flush output",
+  COMMENT = "comment",
 }
 
 export interface IToken {
@@ -42,6 +43,20 @@ export function parse(src: string | Buffer, options: Partial<IParseOptions> = {}
       case " ":
       case "\n":
       case "\r":
+        break;
+
+      case "#":
+        // TODO handle the case where file ends without newline
+        const comment: string[] = ["#"];
+        let j: number = i + 1;
+        for (let char = src[j]; char !== "\n" && char !== "\r"; char = src[++j]) {
+          comment.push(char);
+        }
+        if (src[j - 1] === "\r" && src[j] === "\n") {
+          ++j;
+        }
+        i = j - 1;
+        tokens.push({ type: TokenType.COMMENT, value: comment.join("") });
         break;
 
       case "끄":
