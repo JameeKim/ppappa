@@ -8,10 +8,10 @@ export function buildAst(tokens: Token[]): AstDirectionNode[] {
     throw new Error();
   }
 
-  return processControlFlow(tokens, 0).directions;
+  return processTokens(tokens, 0).directions;
 }
 
-function processControlFlow(
+function processTokens(
   tokens: Token[],
   index: number,
   insideControl: boolean = false,
@@ -79,7 +79,7 @@ function processControlFlow(
         break;
 
       case TokenType.SKIP:
-        const res = processControlFlow(tokens, index + 1, true);
+        const res = processTokens(tokens, index + 1, true);
         directions.push({
           type: AstNodeType.CONTROL,
           repeat: res.directions,
