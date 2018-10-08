@@ -12,7 +12,7 @@
     "clean:lib": "rimraf dist",
     "clean:web": "rimraf web",
     "clean:coverage": "rimraf coverage",
-    "lint": "tslint -p src/tsconfig.json -c src/tslint.json \"src/**/*.ts\"",
+    "lint": "tslint -p src/tsconfig.json -c tslint.json \"src/**/*.ts\"",
     "test": "TS_NODE_PROJECT=\"src/compiler/tsconfig.cjs.json\" mocha",
     "pretest:coverage": "npm-run-all clean:coverage",
     "test:coverage": "TS_NODE_PROJECT=\"src/compiler/tsconfig.cjs.json\" nyc mocha",
