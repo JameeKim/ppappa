@@ -7,7 +7,8 @@
   "module": "dist/module/index.js",
   "scripts": {
     "build": "npm-run-all build:*",
-    "build:cjs": "tsc -p src/compiler/tsconfig.cjs.json",
+    "build:cjs": "tsc -p src/tsconfig.cjs.json",
+    "build:module": "tsc -p src/tsconfig.module.json",
     "clean:build": "rimraf dist web",
     "clean:lib": "rimraf dist",
     "clean:web": "rimraf web",
