@@ -1,8 +1,9 @@
 import { expect } from "chai";
-import { IToken, parse, TokenType } from "./parser";
+import { parse } from "./parser";
+import { Token, TokenType } from "./token";
 
 interface ITestCases {
-  [value: string]: IToken[];
+  [value: string]: Token[];
 }
 
 function runTestCases(testCases: ITestCases): void {

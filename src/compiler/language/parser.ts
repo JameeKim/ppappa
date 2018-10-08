@@ -1,25 +1,4 @@
-export enum TokenType {
-  EOF = "end of file",
-  POINT_R = "move pointer right",
-  POINT_L = "move pointer left",
-  INSERT = "insert 0",
-  RETRIEVE = "pull out",
-  ADD = "add 1",
-  SUB = "subtract 1",
-  MUL = "multiply 2",
-  DIV = "divide by 2",
-  SWITCH = "switch two from top or front",
-  PRINT = "move to output",
-  SKIP = "skip of 0",
-  REPEAT = "repeat if not 0",
-  FLUSH = "flush output",
-  COMMENT = "comment",
-}
-
-export interface IToken {
-  type: TokenType;
-  value: string;
-}
+import { Token, TokenType } from "./token";
 
 export interface IParseOptions {
   locale: string;
@@ -28,12 +7,12 @@ export interface IParseOptions {
 /**
  * Change source code input into an array of tokens
  */
-export function parse(src: string | Buffer, options: Partial<IParseOptions> = {}): IToken[] {
+export function parse(src: string | Buffer, options: Partial<IParseOptions> = {}): Token[] {
   if (src instanceof Buffer) {
     src = src.toString();
   }
 
-  const tokens: IToken[] = [];
+  const tokens: Token[] = [];
 
   let i: number = -1;
   const l: number = src.length;
@@ -135,7 +114,7 @@ export function parse(src: string | Buffer, options: Partial<IParseOptions> = {}
   /**
    * Push the appropriate token depending on the second character, being "아" or "어"
    */
-  function secondCharacter(char: string, position: number, tokenForAh: IToken, tokenForUh: IToken): void {
+  function secondCharacter(char: string, position: number, tokenForAh: Token, tokenForUh: Token): void {
     switch (char) {
       case "아":
         tokens.push(tokenForAh);
