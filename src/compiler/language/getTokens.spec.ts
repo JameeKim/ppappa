@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { getTokens } from "./getToken";
+import { getTokens } from "./getTokens";
 import { Token, TokenType } from "./token";
 
 interface ITestCases {
@@ -24,8 +24,8 @@ function runTestCases(testCases: ITestCases): void {
 /**
  * suite: "Source Code Parsing"
  */
-export function getToken() {
-  describe("#getToken", function() {
+export function testGetTokens() {
+  describe("#getTokens", function() {
     describe("- Individually parse", function() {
       runTestCases({
         "끄아": [
