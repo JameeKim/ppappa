@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { parse } from "./parser";
+import { getTokens } from "./parser";
 import { Token, TokenType } from "./token";
 
 interface ITestCases {
@@ -11,7 +11,7 @@ function runTestCases(testCases: ITestCases): void {
     if (testCases.hasOwnProperty(value)) {
       const tokens = testCases[value];
       it(`parse "${convertNewline(value)}"`, function() {
-        expect(parse(value)).to.deep.eq(tokens);
+        expect(getTokens(value)).to.deep.eq(tokens);
       });
     }
   }

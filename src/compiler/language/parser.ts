@@ -7,7 +7,7 @@ export interface IParseOptions {
 /**
  * Change source code input into an array of tokens
  */
-export function parse(src: string | Buffer, options: Partial<IParseOptions> = {}): Token[] {
+export function getTokens(src: string | Buffer, options: Partial<IParseOptions> = {}): Token[] {
   if (src instanceof Buffer) {
     src = src.toString();
   }
