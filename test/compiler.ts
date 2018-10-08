@@ -1,7 +1,7 @@
-// import { buildAst } from "../src/compiler/language/buildAst.spec";
-import { getToken } from "../src/compiler/language/getToken.spec";
+import { testBuildAst } from "../src/compiler/language/buildAst.spec";
+import { testGetTokens } from "../src/compiler/language/getTokens.spec";
 
 describe("Source Code Parsing", function() {
-  getToken();
-  // buildAst();
+  testGetTokens();
+  testBuildAst();
 });
