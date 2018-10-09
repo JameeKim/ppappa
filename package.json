@@ -14,7 +14,8 @@
     "clean:web": "rimraf web",
     "clean:coverage": "rimraf coverage",
     "lint": "tslint -p src/tsconfig.json -c tslint.json \"src/**/*.ts\"",
-    "test": "TS_NODE_PROJECT=\"test/tsconfig.json\" mocha",
+    "test:lib": "TS_NODE_PROJECT=\"test/tsconfig.json\" mocha test/index.ts",
+    "test:raw": "TS_NODE_PROJECT=\"test/tsconfig.json\" mocha",
     "pretest:coverage": "npm-run-all clean:coverage",
     "test:coverage": "TS_NODE_PROJECT=\"test/tsconfig.json\" nyc mocha",
     "coverage:send": "nyc report --reporter text-lcov | coveralls"
