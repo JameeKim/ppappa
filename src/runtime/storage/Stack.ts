@@ -3,8 +3,17 @@ import { IStorage } from "./types";
 export class Stack implements IStorage {
   protected readonly data: number[];
 
-  public constructor() {
-    this.data = [];
+  public constructor(data?: number[]) {
+    if (data) {
+      if (!Array.isArray(data) || data.some((maybeNumber) => typeof maybeNumber !== "number")) {
+        // TODO error
+        throw new Error();
+      } else {
+        this.data = data;
+      }
+    } else {
+      this.data = [];
+    }
   }
 
   public insert(): void {
