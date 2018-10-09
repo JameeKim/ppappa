@@ -12,7 +12,7 @@ export type StoragePointer = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
 type Omit<T, k extends keyof T> = Pick<T, Exclude<keyof T, k>>;
 
-export class DataContainer implements Omit<IStorage, "rawData">, IOutput {
+export class DataContainer implements Omit<IStorage, "rawData">, Omit<IOutput, "put"> {
   protected readonly storages: IStorage[];
   protected readonly output: Output;
   protected pointer: StoragePointer = 0;
@@ -100,8 +100,11 @@ export class DataContainer implements Omit<IStorage, "rawData">, IOutput {
     this.storages[this.pointer].switch();
   }
 
-  public put(value: number): void {
-    this.output.put(value);
+  public print(): void {
+    const charPoint: number | undefined = this.storages[this.pointer].retrieve();
+    if (charPoint !== undefined) {
+      this.output.put(charPoint);
+    }
   }
 
   public flush(): void {
