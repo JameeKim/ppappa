@@ -1,3 +1,4 @@
+import { DataStorageError } from "./DataStorageError";
 import { IOutput } from "./types";
 
 export class Output implements IOutput {
@@ -6,8 +7,7 @@ export class Output implements IOutput {
   public constructor(content?: number[]) {
     if (content) {
       if (!Array.isArray(content) || content.some((maybeNumber) => typeof maybeNumber !== "number")) {
-        // TODO error
-        throw new Error();
+        throw new DataStorageError("Data for an output should be an array of numbers only");
       } else {
         this.buffer = content;
       }

@@ -1,3 +1,5 @@
+import { RuntimeError } from "../RuntimeError";
+import { DataStorageError } from "./DataStorageError";
 import { IStorage } from "./types";
 
 export class Stack implements IStorage {
@@ -6,8 +8,7 @@ export class Stack implements IStorage {
   public constructor(data?: number[]) {
     if (data) {
       if (!Array.isArray(data) || data.some((maybeNumber) => typeof maybeNumber !== "number")) {
-        // TODO error
-        throw new Error();
+        throw new DataStorageError("Data for a stack should be an array of numbers only");
       } else {
         this.data = data;
       }
@@ -26,16 +27,14 @@ export class Stack implements IStorage {
 
   public add(): void {
     if (!this.data.length) {
-      // TODO error
-      throw new Error();
+      throw new RuntimeError("Tried addition when stack is empty");
     }
     this.data[this.data.length - 1]++;
   }
 
   public sub(): void {
     if (!this.data.length) {
-      // TDOO error
-      throw new Error();
+      throw new RuntimeError("Tried subtraction when stack is empty");
     }
     this.data[this.data.length - 1]--;
   }
@@ -43,8 +42,7 @@ export class Stack implements IStorage {
   public mul(): void {
     const l: number = this.data.length;
     if (!l) {
-      // TODO error
-      throw new Error();
+      throw new RuntimeError("Tried multiplication when stack is empty");
     }
     this.data[l - 1] = this.data[l - 1] * 2;
   }
@@ -52,8 +50,7 @@ export class Stack implements IStorage {
   public div(): void {
     const l: number = this.data.length;
     if (!l) {
-      // TODO error
-      throw new Error();
+      throw new RuntimeError("Tried division when stack is empty");
     }
     this.data[l - 1] = Math.floor(this.data[l - 1] / 2);
   }

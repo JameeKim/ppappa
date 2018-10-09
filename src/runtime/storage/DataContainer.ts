@@ -1,3 +1,4 @@
+import { DataStorageError } from "./DataStorageError";
 import { Output } from "./Output";
 import { Queue } from "./Queue";
 import { Stack } from "./Stack";
@@ -29,8 +30,9 @@ export class DataContainer implements Omit<IStorage, "rawData">, Omit<IOutput, "
         || storages.slice(0, 7).some((maybeStack) => !(maybeStack instanceof Stack))
         || !(storages[8] instanceof Queue)
       ) {
-        // TODO error
-        throw new Error();
+        throw new DataStorageError(
+          "Storages for data container should be an array of length 8, with 7 Stacks and the last one Queue",
+        );
       }
       this.storages = storages;
     } else {
@@ -47,8 +49,7 @@ export class DataContainer implements Omit<IStorage, "rawData">, Omit<IOutput, "
     }
     if (output) {
       if (!(output instanceof Output)) {
-        // TODO error
-        throw new Error();
+        throw new DataStorageError("Output for data container should be an instance of Output");
       }
       this.output = output;
     } else {

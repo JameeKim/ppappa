@@ -1,3 +1,5 @@
+import { RuntimeError } from "../RuntimeError";
+import { DataStorageError } from "./DataStorageError";
 import { IStorage } from "./types";
 
 export class Queue implements IStorage {
@@ -6,8 +8,7 @@ export class Queue implements IStorage {
   public constructor(data?: number[]) {
     if (data) {
       if (!Array.isArray(data) || data.some((maybeNumber) => typeof maybeNumber !== "number")) {
-        // TODO error
-        throw new Error();
+        throw new DataStorageError("Data for a queue should be an array of numbers only");
       } else {
         this.data = data;
       }
@@ -26,32 +27,28 @@ export class Queue implements IStorage {
 
   public add(): void {
     if (!this.data.length) {
-      // TODO error
-      throw new Error();
+      throw new RuntimeError("Tried addition when queue is empty");
     }
     this.data[0]++;
   }
 
   public sub(): void {
     if (!this.data.length) {
-      // TODO error
-      throw new Error();
+      throw new RuntimeError("Tried subtraction when queue is empty");
     }
     this.data[0]--;
   }
 
   public mul(): void {
     if (!this.data.length) {
-      // TODO error
-      throw new Error();
+      throw new RuntimeError("Tried multiplication when queue is empty");
     }
     this.data[0] = this.data[0] * 2;
   }
 
   public div(): void {
     if (!this.data.length) {
-      // TODO error
-      throw new Error();
+      throw new RuntimeError("Tried division when queue is empty");
     }
     this.data[0] = Math.floor(this.data[0] / 2);
   }
