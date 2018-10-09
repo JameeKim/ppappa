@@ -1,3 +1,4 @@
+// istanbul ignore file
 export class PpappaError extends Error {
   protected messageInternal: string;
 

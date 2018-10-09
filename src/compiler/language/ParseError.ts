@@ -1,3 +1,5 @@
+// istanbul ignore file
+
 import { PpappaError } from "../../PpappaError";
 
 export class ParseError extends PpappaError {
