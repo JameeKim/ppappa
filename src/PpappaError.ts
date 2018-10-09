@@ -8,6 +8,10 @@ export class PpappaError extends Error {
     this.messageInternal = newMsg || "Error";
   }
 
+  get internalMessage(): string {
+    return this.messageInternal;
+  }
+
   public constructor(message?: string) {
     super();
     this.messageInternal = message || "Error";
