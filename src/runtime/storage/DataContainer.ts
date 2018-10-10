@@ -1,3 +1,4 @@
+import { Omit } from "../../types";
 import { DataStorageError } from "./DataStorageError";
 import { Output } from "./Output";
 import { Queue } from "./Queue";
@@ -18,8 +19,6 @@ export interface IDataContainerState {
   outputContent: number[];
 }
 
-type Omit<T, k extends keyof T> = Pick<T, Exclude<keyof T, k>>;
-
 export class DataContainer implements Omit<IStorage, "rawData">, Omit<IOutput, "put"> {
   protected readonly storages: IStorage[];
   protected readonly output: Output;
@@ -27,6 +26,10 @@ export class DataContainer implements Omit<IStorage, "rawData">, Omit<IOutput, "
 
   get currentPointer(): StoragePointer {
     return this.pointer;
+  }
+
+  get currentValue(): number | undefined {
+    return this.storages[this.currentPointer].currentValue;
   }
 
   public constructor({ data, storages, content, output }: IDataContainerConstructorOption = {}) {

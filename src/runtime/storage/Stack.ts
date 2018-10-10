@@ -1,19 +1,14 @@
 import { RuntimeError } from "../RuntimeError";
-import { DataStorageError } from "./DataStorageError";
+import { DataStorage } from "./DataStorage";
 import { IStorage } from "./types";
 
-export class Stack implements IStorage {
-  protected readonly data: number[];
+export class Stack extends DataStorage implements IStorage {
+  get currentValue(): number | undefined {
+    return this.data.length ? this.data[this.data.length - 1] : undefined;
+  }
 
   public constructor(data?: number[]) {
-    if (data) {
-      if (!Array.isArray(data) || data.some((maybeNumber) => typeof maybeNumber !== "number")) {
-        throw new DataStorageError("Data for a stack should be an array of numbers only");
-      }
-      this.data = data.slice(0);
-    } else {
-      this.data = [];
-    }
+    super(data);
   }
 
   public insert(): void {
@@ -62,13 +57,5 @@ export class Stack implements IStorage {
     const { top, second } = { top: this.data[l - 1], second: this.data[l - 2] };
     this.data[l - 1] = second;
     this.data[l - 2] = top;
-  }
-
-  public rawData(): number[] {
-    return this.data.slice(0);
-  }
-
-  public dataToJSON(): string {
-    return JSON.stringify(this.data);
   }
 }

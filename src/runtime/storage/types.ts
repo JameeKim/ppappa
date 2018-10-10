@@ -1,4 +1,5 @@
 export interface IStorage {
+  currentValue: number | undefined;
   insert(): void;
   retrieve(): number | undefined;
   add(): void;

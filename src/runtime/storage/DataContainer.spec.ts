@@ -348,6 +348,17 @@ export function testDataContainer(): void {
       });
     });
 
+    describe("- Current value", function() {
+      it("currentValue", function() {
+        const container = new DataContainer({ data: [[1, 2], [], [], [], [], [], [], [1, 2]] });
+        expect(container.currentValue).to.eq(2);
+        container.movePointer(-1);
+        expect(container.currentValue).to.eq(1);
+        container.movePointer(-1);
+        expect(container.currentValue).to.eq(undefined);
+      });
+    });
+
     describe("- Output management", function() {
       it("print (moving data to output)", function() {
         const container = new DataContainer({ data: [[2, 7], [], [], [0, 3], [], [], [1], [5, 1]] });

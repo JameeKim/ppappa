@@ -102,6 +102,24 @@ export function testQueue(): void {
       });
     });
 
+    describe("- Current value", function() {
+      it("undefined if queue empty", function() {
+        const queue = new Queue();
+        expect(queue.currentValue).to.eq(undefined);
+      });
+
+      it("currentValue", function() {
+        const queue = new Queue([2, 3]);
+        expect(queue.currentValue).to.eq(2);
+        queue.retrieve();
+        expect(queue.currentValue).to.eq(3);
+        queue.insert();
+        expect(queue.currentValue).to.eq(3);
+        queue.retrieve();
+        expect(queue.currentValue).to.eq(0);
+      });
+    });
+
     describe("- Math operations", function() {
       describe("empty queue", function() {
         let queue: Queue;

@@ -1,19 +1,14 @@
 import { RuntimeError } from "../RuntimeError";
-import { DataStorageError } from "./DataStorageError";
+import { DataStorage } from "./DataStorage";
 import { IStorage } from "./types";
 
-export class Queue implements IStorage {
-  protected readonly data: number[];
+export class Queue extends DataStorage implements IStorage {
+  get currentValue(): number | undefined {
+    return this.data.length ? this.data[0] : undefined;
+  }
 
   public constructor(data?: number[]) {
-    if (data) {
-      if (!Array.isArray(data) || data.some((maybeNumber) => typeof maybeNumber !== "number")) {
-        throw new DataStorageError("Data for a queue should be an array of numbers only");
-      }
-      this.data = data.slice(0);
-    } else {
-      this.data = [];
-    }
+    super(data);
   }
 
   public insert(): void {
@@ -59,13 +54,5 @@ export class Queue implements IStorage {
     const { first, second } = { first: this.data[0], second: this.data[1] };
     this.data[0] = second;
     this.data[1] = first;
-  }
-
-  public rawData(): number[] {
-    return this.data.slice(0);
-  }
-
-  public dataToJSON(): string {
-    return JSON.stringify(this.data);
   }
 }

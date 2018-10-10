@@ -102,6 +102,22 @@ export function testStack(): void {
       });
     });
 
+    describe("- Current value", function() {
+      it("undefined if stack empty", function() {
+        const stack = new Stack();
+        expect(stack.currentValue).to.eq(undefined);
+      });
+
+      it("currentValue", function() {
+        const stack = new Stack([2, 3]);
+        expect(stack.currentValue).to.eq(3);
+        stack.retrieve();
+        expect(stack.currentValue).to.eq(2);
+        stack.insert();
+        expect(stack.currentValue).to.eq(0);
+      });
+    });
+
     describe("- Math operations", function() {
       describe("empty stack", function() {
         let stack: Stack;
