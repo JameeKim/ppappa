@@ -8,9 +8,8 @@ export class Output implements IOutput {
     if (content) {
       if (!Array.isArray(content) || content.some((maybeNumber) => typeof maybeNumber !== "number")) {
         throw new DataStorageError("Data for an output should be an array of numbers only");
-      } else {
-        this.buffer = content;
       }
+      this.buffer = content.slice(0);
     } else {
       this.buffer = [];
     }

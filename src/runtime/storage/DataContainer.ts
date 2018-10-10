@@ -7,9 +7,16 @@ import { IOutput, IStorage } from "./types";
 export interface IDataContainerConstructorOption {
   storages?: IStorage[];
   output?: Output;
+  data?: number[][];
+  content?: number[];
 }
 
 export type StoragePointer = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
+export interface IDataContainerState {
+  data: number[][];
+  outputContent: number[];
+}
 
 type Omit<T, k extends keyof T> = Pick<T, Exclude<keyof T, k>>;
 
@@ -22,38 +29,60 @@ export class DataContainer implements Omit<IStorage, "rawData">, Omit<IOutput, "
     return this.pointer;
   }
 
-  public constructor({ storages, output }: IDataContainerConstructorOption) {
-    if (storages) {
+  public constructor({ data, storages, content, output }: IDataContainerConstructorOption = {}) {
+    if (data) {
       if (
-        !Array.isArray(storages)
-        || storages.length !== 8
-        || storages.slice(0, 7).some((maybeStack) => !(maybeStack instanceof Stack))
-        || !(storages[8] instanceof Queue)
+        !Array.isArray(data)
+        || data.length !== 8
+        || data.some(
+          (maybeNumArr) => !Array.isArray(maybeNumArr) || maybeNumArr.some((maybeNum) => typeof maybeNum !== "number"),
+        )
       ) {
         throw new DataStorageError(
-          "Storages for data container should be an array of length 8, with 7 Stacks and the last one Queue",
+          "Data for data container must be an array of length 8, containing arrays of numbers only",
         );
       }
-      this.storages = storages;
+      this.storages = data.map((arr, index) => index < 7 ? new Stack(arr) : new Queue(arr));
     } else {
-      this.storages = [
-        new Stack(),
-        new Stack(),
-        new Stack(),
-        new Stack(),
-        new Stack(),
-        new Stack(),
-        new Stack(),
-        new Queue(),
-      ];
-    }
-    if (output) {
-      if (!(output instanceof Output)) {
-        throw new DataStorageError("Output for data container should be an instance of Output");
+      if (storages) {
+        if (
+          !Array.isArray(storages)
+          || storages.length !== 8
+          || storages.slice(0, 7).some((maybeStack) => !(maybeStack instanceof Stack))
+          || !(storages[7] instanceof Queue)
+        ) {
+          throw new DataStorageError(
+            "Storages for data container should be an array of length 8, with 7 Stacks and the last one Queue",
+          );
+        }
+        this.storages = storages;
+      } else {
+        this.storages = [
+          new Stack(),
+          new Stack(),
+          new Stack(),
+          new Stack(),
+          new Stack(),
+          new Stack(),
+          new Stack(),
+          new Queue(),
+        ];
       }
-      this.output = output;
+    }
+    if (content) {
+      if (!Array.isArray(content) || content.some((maybeNumber) => typeof maybeNumber !== "number")) {
+        throw new DataStorageError("Output content for data container should be an array of numbers only");
+      }
+      this.output = new Output(content);
     } else {
-      this.output = new Output();
+      if (output) {
+        if (!(output instanceof Output)) {
+          throw new DataStorageError("Output for data container should be an instance of Output");
+        }
+        this.output = output;
+      } else {
+        this.output = new Output();
+      }
     }
   }
 
@@ -64,12 +93,14 @@ export class DataContainer implements Omit<IStorage, "rawData">, Omit<IOutput, "
       } else {
         this.pointer++;
       }
-    } else {
+    } else if (direction < 0) {
       if (this.pointer < 1) {
         this.pointer = 7;
       } else {
         this.pointer--;
       }
+    } else {
+      throw new DataStorageError("DataContainer.prototype.movePointer only accepts arg larger or less than 0");
     }
   }
 
@@ -102,7 +133,7 @@ export class DataContainer implements Omit<IStorage, "rawData">, Omit<IOutput, "
   }
 
   public print(): void {
-    const charPoint: number | undefined = this.storages[this.pointer].retrieve();
+    const charPoint: number | undefined = this.retrieve();
     if (charPoint !== undefined) {
       this.output.put(charPoint);
     }
@@ -120,7 +151,7 @@ export class DataContainer implements Omit<IStorage, "rawData">, Omit<IOutput, "
     return this.output.rawContent();
   }
 
-  public rawState(): { data: number[][], outputContent: number[] } {
+  public rawState(): IDataContainerState {
     return { data: this.rawData(), outputContent: this.rawContent() };
   }
 

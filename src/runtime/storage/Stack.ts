@@ -9,9 +9,8 @@ export class Stack implements IStorage {
     if (data) {
       if (!Array.isArray(data) || data.some((maybeNumber) => typeof maybeNumber !== "number")) {
         throw new DataStorageError("Data for a stack should be an array of numbers only");
-      } else {
-        this.data = data;
       }
+      this.data = data.slice(0);
     } else {
       this.data = [];
     }
