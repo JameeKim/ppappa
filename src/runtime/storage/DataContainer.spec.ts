@@ -360,7 +360,10 @@ export function testDataContainer(): void {
         container.movePointer(-1);
         container.movePointer(-1);
         container.print();
-        expect(container.rawContent()).to.deep.eq([7, 5, 3]);
+        expect(container.rawState()).to.deep.eq({
+          data: [[2], [], [], [0], [], [], [1], [1]],
+          outputContent: [7, 5, 3],
+        });
       });
 
       it("flush", function() {
