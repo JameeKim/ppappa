@@ -68,6 +68,22 @@ export function testGetTokens() {
           { type: TokenType.PRINT, value: "뜨어" },
           { type: TokenType.EOF, value: "\0" },
         ],
+        "흐아": [
+          { type: TokenType.MOVE_R, value: "흐아" },
+          { type: TokenType.EOF, value: "\0" },
+        ],
+        "흐어": [
+          { type: TokenType.MOVE_L, value: "흐어" },
+          { type: TokenType.EOF, value: "\0" },
+        ],
+        "크아": [
+          { type: TokenType.DUPLICATE, value: "크아" },
+          { type: TokenType.EOF, value: "\0" },
+        ],
+        "크어": [
+          { type: TokenType.NOOP, value: "크어" },
+          { type: TokenType.EOF, value: "\0" },
+        ],
         "으아": [
           { type: TokenType.SKIP, value: "으아" },
           { type: TokenType.EOF, value: "\0" },

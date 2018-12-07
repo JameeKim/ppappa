@@ -100,6 +100,8 @@ export function testQueue(): void {
         queue.retrieve();
         expect(queue.dataToJSON()).to.eq("[]");
       });
+
+      it("duplicate");
     });
 
     describe("- Current value", function() {

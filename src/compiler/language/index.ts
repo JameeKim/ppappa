@@ -1,5 +1,5 @@
 export { buildAst } from "./buildAst";
-export { getTokens, IParseOptions } from "./getTokens";
+export { getTokens, IGetTokensOptions } from "./getTokens";
 export { parse } from "./parse";
 export { ParseError } from "./ParseError";
 export { print } from "./print";

@@ -1,15 +1,27 @@
 import { DataStorageError } from "./DataStorageError";
 import { IOutput } from "./types";
 
+export interface IOutputOption {
+  content?: number[];
+  outputFunction?: (...args: string[]) => void;
+}
+
+const defaultOptions: Required<IOutputOption> = {
+  content: [],
+  outputFunction: console.log,
+};
+
 export class Output implements IOutput {
   protected buffer: number[];
+  protected readonly options: Required<IOutputOption>;
 
-  public constructor(content?: number[]) {
-    if (content) {
-      if (!Array.isArray(content) || content.some((maybeNumber) => typeof maybeNumber !== "number")) {
+  public constructor(options: IOutputOption = {}) {
+    this.options = { ...defaultOptions, ...options };
+    if (options.content) {
+      if (!Array.isArray(options.content) || options.content.some((maybeNumber) => typeof maybeNumber !== "number")) {
         throw new DataStorageError("Data for an output should be an array of numbers only");
       }
-      this.buffer = content.slice(0);
+      this.buffer = options.content.slice(0);
     } else {
       this.buffer = [];
     }
@@ -20,7 +32,7 @@ export class Output implements IOutput {
   }
 
   public flush(): void {
-    console.log(String.fromCodePoint(...this.buffer));
+    this.options.outputFunction(String.fromCodePoint(...this.buffer));
     this.buffer = [];
   }
 

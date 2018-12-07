@@ -1,7 +1,9 @@
 import { AstDirectionNode } from "./ast";
-import { buildAst } from "./buildAst";
-import { getTokens } from "./getTokens";
+import { buildAst, IBuildAstOption } from "./buildAst";
+import { getTokens, IGetTokensOptions } from "./getTokens";
 
-export function parse(src: string | Buffer): AstDirectionNode[] {
-  return buildAst(getTokens(src));
+export interface IParseOption extends IGetTokensOptions, IBuildAstOption {}
+
+export function parse(src: string | Buffer, options: IParseOption = {}): AstDirectionNode[] {
+  return buildAst(getTokens(src, options), options);
 }

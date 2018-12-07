@@ -1,8 +1,24 @@
 import {
+  addToken,
+  divideToken,
+  duplicateToken,
+  insertToken,
+  moveLeftToken,
+  moveRightToken,
+  multiplyToken,
+  pointerLeftToken,
+  pointerRightToken,
+  printToken,
+  retrieveToken,
+  subtractToken,
+  switchToken,
   TokenAdd,
   TokenDivide,
+  TokenDuplicate,
   TokenFlush,
   TokenInsert,
+  TokenMoveLeft,
+  TokenMoveRight,
   TokenMultiply,
   TokenPointLeft,
   TokenPointRight,
@@ -42,41 +58,101 @@ export interface AstNodeBase {}
 
 export type PointerNode = PointerRightNode | PointerLeftNode;
 interface IPointerNode extends AstNodeBase {
-  type: AstNodeType.POINTER;
+  readonly type: AstNodeType.POINTER;
 }
 export interface PointerRightNode extends IPointerNode {
-  token: TokenPointRight;
-  direction: "right";
+  readonly token: TokenPointRight;
+  readonly direction: "right";
 }
 export interface PointerLeftNode extends IPointerNode {
-  token: TokenPointLeft;
-  direction: "left";
+  readonly token: TokenPointLeft;
+  readonly direction: "left";
 }
+export const pointerRightDirection: PointerRightNode = Object.freeze<PointerRightNode>({
+  type: AstNodeType.POINTER,
+  direction: "right",
+  token: pointerRightToken,
+});
+export const pointerLeftDirection: PointerLeftNode = Object.freeze<PointerLeftNode>({
+  type: AstNodeType.POINTER,
+  direction: "left",
+  token: pointerLeftToken,
+});
 
 export type PositioningNode =
   | PositioningInsertNode
   | PositioningRetrieveNode
   | PositioningSwitchNode
-  | PositioningPrintNode;
+  | PositioningPrintNode
+  | PositioningMoveRightNode
+  | PositioningMoveLeftNode
+  | PositioningDuplicateNode;
 interface IPositioningNode extends AstNodeBase {
-  type: AstNodeType.POSITIONING;
+  readonly type: AstNodeType.POSITIONING;
 }
 export interface PositioningInsertNode extends IPositioningNode {
-  token: TokenInsert;
-  action: "insert";
+  readonly token: TokenInsert;
+  readonly action: "insert";
 }
 export interface PositioningRetrieveNode extends IPositioningNode {
-  token: TokenRetrieve;
-  action: "retrieve";
+  readonly token: TokenRetrieve;
+  readonly action: "retrieve";
 }
 export interface PositioningSwitchNode extends IPositioningNode {
-  token: TokenSwitch;
-  action: "switch";
+  readonly token: TokenSwitch;
+  readonly action: "switch";
 }
 export interface PositioningPrintNode extends IPositioningNode {
-  token: TokenPrint;
-  action: "print";
+  readonly token: TokenPrint;
+  readonly action: "print";
 }
+export interface PositioningMoveRightNode extends IPositioningNode {
+  readonly token: TokenMoveRight;
+  readonly action: "moveRight";
+}
+export interface PositioningMoveLeftNode extends IPositioningNode {
+  readonly token: TokenMoveLeft;
+  readonly action: "moveLeft";
+}
+export interface PositioningDuplicateNode extends IPositioningNode {
+  readonly token: TokenDuplicate;
+  readonly action: "duplicate";
+}
+export const insertDirection: PositioningInsertNode = Object.freeze<PositioningInsertNode>({
+  type: AstNodeType.POSITIONING,
+  action: "insert",
+  token: insertToken,
+});
+export const retrieveDirection: PositioningRetrieveNode = Object.freeze<PositioningRetrieveNode>({
+  type: AstNodeType.POSITIONING,
+  action: "retrieve",
+  token: retrieveToken,
+});
+export const switchDirection: PositioningSwitchNode = Object.freeze<PositioningSwitchNode>({
+  type: AstNodeType.POSITIONING,
+  action: "switch",
+  token: switchToken,
+});
+export const printDirection: PositioningPrintNode = Object.freeze<PositioningPrintNode>({
+  type: AstNodeType.POSITIONING,
+  action: "print",
+  token: printToken,
+});
+export const moveRightDirection: PositioningMoveRightNode = Object.freeze<PositioningMoveRightNode>({
+  type: AstNodeType.POSITIONING,
+  action: "moveRight",
+  token: moveRightToken,
+});
+export const moveLeftDirection: PositioningMoveLeftNode = Object.freeze<PositioningMoveLeftNode>({
+  type: AstNodeType.POSITIONING,
+  action: "moveLeft",
+  token: moveLeftToken,
+});
+export const duplicateDirection: PositioningDuplicateNode = Object.freeze<PositioningDuplicateNode>({
+  type: AstNodeType.POSITIONING,
+  action: "duplicate",
+  token: duplicateToken,
+});
 
 export type MathOpNode =
   | MathOpAddNode
@@ -84,36 +160,56 @@ export type MathOpNode =
   | MathOpMultiplyNode
   | MathOpDivideNode;
 interface IMathOpNode extends AstNodeBase {
-  type: AstNodeType.MATHOP;
+  readonly type: AstNodeType.MATHOP;
 }
 export interface MathOpAddNode extends IMathOpNode {
-  token: TokenAdd;
-  operation: "+";
+  readonly token: TokenAdd;
+  readonly operation: "+";
 }
 export interface MathOpSubtractNode extends IMathOpNode {
-  token: TokenSubtract;
-  operation: "-";
+  readonly token: TokenSubtract;
+  readonly operation: "-";
 }
 export interface MathOpMultiplyNode extends IMathOpNode {
-  token: TokenMultiply;
-  operation: "*";
+  readonly token: TokenMultiply;
+  readonly operation: "*";
 }
 export interface MathOpDivideNode extends IMathOpNode {
-  token: TokenDivide;
-  operation: "/";
+  readonly token: TokenDivide;
+  readonly operation: "/";
 }
+export const addDirection: MathOpAddNode = Object.freeze<MathOpAddNode>({
+  type: AstNodeType.MATHOP,
+  operation: "+",
+  token: addToken,
+});
+export const subtractDirection: MathOpSubtractNode = Object.freeze<MathOpSubtractNode>({
+  type: AstNodeType.MATHOP,
+  operation: "-",
+  token: subtractToken,
+});
+export const multiplyDirection: MathOpMultiplyNode = Object.freeze<MathOpMultiplyNode>({
+  type: AstNodeType.MATHOP,
+  operation: "*",
+  token: multiplyToken,
+});
+export const divideDirection: MathOpDivideNode = Object.freeze<MathOpDivideNode>({
+  type: AstNodeType.MATHOP,
+  operation: "/",
+  token: divideToken,
+});
 
 export type ControlNode = ControlSkipRepeatNode;
 interface IControlNode extends AstNodeBase {
-  type: AstNodeType.CONTROL;
+  readonly type: AstNodeType.CONTROL;
 }
 export interface ControlSkipRepeatNode extends IControlNode {
-  startToken: TokenSkip;
-  endToken: TokenRepeat;
-  repeat: AstDirectionNode[];
+  readonly startToken: TokenSkip;
+  readonly endToken: TokenRepeat;
+  readonly repeat: AstDirectionNode[];
 }
 
 export interface FlushNode extends AstNodeBase {
-  type: AstNodeType.FLUSH;
-  token: TokenFlush;
+  readonly type: AstNodeType.FLUSH;
+  readonly token: TokenFlush;
 }

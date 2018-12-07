@@ -174,7 +174,7 @@ export function testDataContainer(): void {
       });
 
       it("with output only", function() {
-        checkData({ output: new Output([33]) }, arrOf8NumArrs, [33]);
+        checkData({ output: new Output({ content: [33] }) }, arrOf8NumArrs, [33]);
       });
 
       it("output not an instance of Output", function() {
@@ -346,6 +346,10 @@ export function testDataContainer(): void {
         container.switch();
         expect(container.rawData()).to.deep.eq([[], [3, 2], [], [3, 5, 4], [], [1], [], [1, 6, 5]]);
       });
+
+      it("moveRight");
+      it("moveLeft");
+      it("duplicate");
     });
 
     describe("- Current value", function() {
@@ -378,6 +382,7 @@ export function testDataContainer(): void {
       });
 
       it("flush", function() {
+        // TODO use spy instead
         const consoleStub = stub(console, "log");
         const container = new DataContainer({ content: [49240, 50500, 49240, 50500] });
         container.flush();

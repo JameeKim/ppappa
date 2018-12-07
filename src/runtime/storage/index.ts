@@ -1,4 +1,4 @@
-export { DataContainer } from "./DataContainer";
+export { DataContainer, IDataContainerConstructorOption, IDataContainerState } from "./DataContainer";
 export { DataStorageError } from "./DataStorageError";
 export { Output } from "./Output";
 export { Queue } from "./Queue";

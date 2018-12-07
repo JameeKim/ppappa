@@ -1,13 +1,13 @@
 import { Token, TokenType } from "./token";
 
-export interface IParseOptions {
-  locale: string;
+export interface IGetTokensOptions {
+  locale?: string;
 }
 
 /**
  * Change source code input into an array of tokens
  */
-export function getTokens(src: string | Buffer, options: Partial<IParseOptions> = {}): Token[] {
+export function getTokens(src: string | Buffer, options: IGetTokensOptions = {}): Token[] {
   if (src instanceof Buffer) {
     src = src.toString();
   }
@@ -80,6 +80,24 @@ export function getTokens(src: string | Buffer, options: Partial<IParseOptions> 
           i,
           { type: TokenType.SWITCH, value: "뜨아" },
           { type: TokenType.PRINT, value: "뜨어" },
+        );
+        break;
+
+      case "흐":
+        secondCharacter(
+          src[++i],
+          i,
+          { type: TokenType.MOVE_R, value: "흐아" },
+          { type: TokenType.MOVE_L, value: "흐어" },
+        );
+        break;
+
+      case "크":
+        secondCharacter(
+          src[++i],
+          i,
+          { type: TokenType.DUPLICATE, value: "크아" },
+          { type: TokenType.NOOP, value: "크어" },
         );
         break;
 

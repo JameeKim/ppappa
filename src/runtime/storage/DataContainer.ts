@@ -1,11 +1,12 @@
 import { Omit } from "../../types";
+import { RuntimeError } from "../RuntimeError";
 import { DataStorageError } from "./DataStorageError";
-import { Output } from "./Output";
+import { IOutputOption, Output } from "./Output";
 import { Queue } from "./Queue";
 import { Stack } from "./Stack";
 import { IOutput, IStorage } from "./types";
 
-export interface IDataContainerConstructorOption {
+export interface IDataContainerConstructorOption extends IOutputOption {
   storages?: IStorage[];
   output?: Output;
   data?: number[][];
@@ -19,9 +20,14 @@ export interface IDataContainerState {
   outputContent: number[];
 }
 
+const defaultOptions: { outputFunction: (...args: string[]) => void } = {
+  outputFunction: console.log,
+};
+
 export class DataContainer implements Omit<IStorage, "rawData">, Omit<IOutput, "put"> {
   protected readonly storages: IStorage[];
   protected readonly output: Output;
+  protected readonly options: { outputFunction: (...args: string[]) => void };
   protected pointer: StoragePointer = 0;
 
   get currentPointer(): StoragePointer {
@@ -32,7 +38,8 @@ export class DataContainer implements Omit<IStorage, "rawData">, Omit<IOutput, "
     return this.storages[this.currentPointer].currentValue;
   }
 
-  public constructor({ data, storages, content, output }: IDataContainerConstructorOption = {}) {
+  public constructor({ data, storages, content, output, outputFunction }: IDataContainerConstructorOption = {}) {
+    this.options = { outputFunction: outputFunction || defaultOptions.outputFunction };
     if (data) {
       if (
         !Array.isArray(data)
@@ -76,7 +83,7 @@ export class DataContainer implements Omit<IStorage, "rawData">, Omit<IOutput, "
       if (!Array.isArray(content) || content.some((maybeNumber) => typeof maybeNumber !== "number")) {
         throw new DataStorageError("Output content for data container should be an array of numbers only");
       }
-      this.output = new Output(content);
+      this.output = new Output({ content, ...this.options });
     } else {
       if (output) {
         if (!(output instanceof Output)) {
@@ -84,7 +91,7 @@ export class DataContainer implements Omit<IStorage, "rawData">, Omit<IOutput, "
         }
         this.output = output;
       } else {
-        this.output = new Output();
+        this.output = new Output({ ...this.options });
       }
     }
   }
@@ -107,8 +114,8 @@ export class DataContainer implements Omit<IStorage, "rawData">, Omit<IOutput, "
     }
   }
 
-  public insert(): void {
-    this.storages[this.pointer].insert();
+  public insert(value?: number): void {
+    this.storages[this.pointer].insert(value);
   }
 
   public retrieve(): number | undefined {
@@ -142,6 +149,18 @@ export class DataContainer implements Omit<IStorage, "rawData">, Omit<IOutput, "
     }
   }
 
+  public moveRight(): void {
+    this.moveNumber(1);
+  }
+
+  public moveLeft(): void {
+    this.moveNumber(-1);
+  }
+
+  public duplicate(): void {
+    this.storages[this.pointer].duplicate();
+  }
+
   public flush(): void {
     this.output.flush();
   }
@@ -168,5 +187,16 @@ export class DataContainer implements Omit<IStorage, "rawData">, Omit<IOutput, "
 
   public stateToJSON(): string {
     return JSON.stringify(this.rawState());
+  }
+
+  protected moveNumber(direction: 1 | -1): void {
+    const numToMove = this.retrieve();
+    if (numToMove === undefined) {
+      // TODO error
+      throw new RuntimeError();
+    }
+    this.movePointer(direction);
+    this.storages[this.pointer].insert(numToMove);
+    this.movePointer(-direction as 1 | -1);
   }
 }

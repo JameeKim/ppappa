@@ -1,4 +1,3 @@
-import { RuntimeError } from "../RuntimeError";
 import { DataStorage } from "./DataStorage";
 import { IStorage } from "./types";
 
@@ -11,8 +10,8 @@ export class Queue extends DataStorage implements IStorage {
     super(data);
   }
 
-  public insert(): void {
-    this.data.push(0);
+  public insert(value?: number): void {
+    this.data.push(value || 0);
   }
 
   public retrieve(): number | undefined {
@@ -20,30 +19,22 @@ export class Queue extends DataStorage implements IStorage {
   }
 
   public add(): void {
-    if (!this.data.length) {
-      throw new RuntimeError("Tried addition when queue is empty");
-    }
+    this.throwIfEmpty("addition");
     this.data[0]++;
   }
 
   public sub(): void {
-    if (!this.data.length) {
-      throw new RuntimeError("Tried subtraction when queue is empty");
-    }
+    this.throwIfEmpty("subtraction");
     this.data[0]--;
   }
 
   public mul(): void {
-    if (!this.data.length) {
-      throw new RuntimeError("Tried multiplication when queue is empty");
-    }
+    this.throwIfEmpty("multiplication");
     this.data[0] = this.data[0] * 2;
   }
 
   public div(): void {
-    if (!this.data.length) {
-      throw new RuntimeError("Tried division when queue is empty");
-    }
+    this.throwIfEmpty("division");
     this.data[0] = Math.floor(this.data[0] / 2);
   }
 
@@ -54,5 +45,10 @@ export class Queue extends DataStorage implements IStorage {
     const { first, second } = { first: this.data[0], second: this.data[1] };
     this.data[0] = second;
     this.data[1] = first;
+  }
+
+  public duplicate(): void {
+    this.throwIfEmpty("duplicating");
+    this.data.push(this.data[0]);
   }
 }

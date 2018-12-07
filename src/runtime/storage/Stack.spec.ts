@@ -100,6 +100,8 @@ export function testStack(): void {
         stack.retrieve();
         expect(stack.dataToJSON()).to.eq("[]");
       });
+
+      it("duplicate");
     });
 
     describe("- Current value", function() {

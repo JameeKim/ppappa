@@ -13,7 +13,7 @@ export function testOutput(): void {
       });
 
       it("with data", function() {
-        const output = new Output([1, 2, 3]);
+        const output = new Output({ content: [1, 2, 3] });
         // @ts-ignore: access to protected member "buffer"
         expect(output.buffer).to.deep.eq([1, 2, 3]);
       });
@@ -35,7 +35,7 @@ export function testOutput(): void {
       let output: Output;
 
       beforeEach(function() {
-        output = new Output([1, 2, 3]);
+        output = new Output({ content: [1, 2, 3] });
       });
 
       it("raw content should be exactly same to the real content", function() {
@@ -68,6 +68,7 @@ export function testOutput(): void {
       });
 
       it("flush the content to the console", function() {
+        // TODO do not need to use stub, use spy instead
         const consoleStub = stub(console, "log");
         [72, 101, 108, 108, 111, 44, 32, 119, 111, 114, 108, 100, 33].forEach((num) => output.put(num));
         output.flush();

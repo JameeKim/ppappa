@@ -1,3 +1,5 @@
+import { testExecute } from "../../src/runtime/execution/execute.spec";
+import { testGenerateSrc } from "../../src/runtime/execution/generateSrc.spec";
 import { testDataContainer } from "../../src/runtime/storage/DataContainer.spec";
 import { testOutput } from "../../src/runtime/storage/Output.spec";
 import { testQueue } from "../../src/runtime/storage/Queue.spec";
@@ -9,5 +11,10 @@ describe("Runtime", function() {
     testQueue();
     testOutput();
     testDataContainer();
+  });
+
+  describe.only("Execution", function() {
+    testExecute();
+    testGenerateSrc();
   });
 });
